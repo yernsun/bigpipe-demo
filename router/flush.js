@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 
+const html = require('./template');
 
 
 module.exports = function (req, res) {
@@ -20,17 +21,18 @@ module.exports = function (req, res) {
 
 
 const map = {
-    index(req, res) {
-            let blocks = getBlocks();
+    bigpipe(req, res) {
+            res.write(html);
+            let blocks = getPipeData();
             for (let k in blocks) {
                 blocks[k].then((rs) => {
-                    res.flush('<div>' + rs + '</div>');
-                }).catch((rs) => {
-                    console.warn(rs);
+                    res.write(`
+                    <script>insertPagelet({id:'pagelet-${k}' ,'html':'${rs.data}'})</script>
+                    `);
                 });
             }
             Promise.all(blocks).then(() => {
-                res.end();
+                res.end('</html>');
             });
         },
         order(req, res) {
@@ -51,6 +53,7 @@ const map = {
 
 
         },
+
         // 随机
         random(req, res) {
             let blocks = getBlocks();
@@ -69,6 +72,29 @@ const map = {
 };
 
 
+
+function getPipeData() {
+    let blocks = [];
+    let size = 3;
+    let responseTimer = [2, 5, 7].sort(() => {
+        return Math.random(+new Date) > 0.5
+    });
+    for (let i = 0; i < size; i++) {
+        blocks.push(new Promise((resolve, reject) => {
+            let timer = Math.max(Math.random(+new Date) * 1000 % 1000, 200);
+            setTimeout(function () {
+                resolve({
+                    errorNo: 0,
+                    errorMsg: 'success',
+                    data: '数据块' + i
+                });
+                // 模拟后端接口任意时间返回
+            }, responseTimer[i]*100);
+        }));
+    }
+    return blocks;
+}
+
 function getBlocks() {
     let blocks = [];
     let size = 15;
@@ -76,7 +102,7 @@ function getBlocks() {
         let firstScreen = false;
         blocks.push(new Promise((resolve, reject) => {
             let timer = Math.max(Math.random(+new Date) * 1000 % 1000, 200);
-            
+
             if (i < 5 || i > size - 5) {
                 timer = i * 10;
                 firstScreen = true;
