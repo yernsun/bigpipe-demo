@@ -17,6 +17,7 @@ let server = http.createServer(function (req, res) {
             'Content-Type': 'text/plain'
         });
         res.end('Error 404');
+        console.log(e);
     }
 
     res.flush = (blocks) => {
