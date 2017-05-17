@@ -1,5 +1,5 @@
 # BigPipe 实现原理
-1. 执行
+1. 执行启动运行环境
 ```shell
 npm start
 ```
