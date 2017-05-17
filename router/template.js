@@ -67,7 +67,7 @@ module.exports = `<!DOCTYPE html>
         function insertPagelet(pagelet) {
             pagelet = pagelet || {};
             document.getElementById(pagelet.id).innerHTML = pagelet.html;
-            pagelet.done && pagelet.done();
+            pagelet.done && pagelet.done(pagelet);
         }
     </script>
 </head>

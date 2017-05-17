@@ -6,23 +6,27 @@ let server = http.createServer(function (req, res) {
     Object.assign(req, url.parse(req.url, true));
     req.path = req.pathname;
 
+    let timer = ~~ req.query.timer;
 
+    setTimeout(
+        () => {
+            // 路由
+            try {
 
-    // 路由
-    try {
-        require(path.join(__dirname, 'router', getRouter(req.path)))(req, res);
-    }
-    catch (e) {
-        res.writeHead(404, {
-            'Content-Type': 'text/plain'
-        });
-        res.end('Error 404');
-        console.log(e);
-    }
+                require(path.join(__dirname, 'router', getRouter(req.path)))(req, res);
+            }
+            catch (e) {
+                res.writeHead(404, {
+                    'Content-Type': 'text/plain'
+                });
+                res.end('Error 404');
+                console.log(e);
+            }
 
-    res.flush = (blocks) => {
+            res.flush = (blocks) => {
 
-    };
+            };
+        }, timer);
 
 
     //    res.writeHead(200, {
@@ -56,8 +60,8 @@ function getRouter(pathname) {
     if (pathname === '/') {
         return 'home';
     }
-    else{
-        return  pathname.replace(/^\/?(\w+).*$/i, '$1');
+    else {
+        return pathname.replace(/^\/?(\w+).*$/i, '$1');
     }
 }
 
