@@ -41,28 +41,3 @@ function getRouter(pathname) {
         return pathname.replace(/^\/?(\w+).*$/i, '$1');
     }
 }
-
-function makeBlocks() {
-    let blocks = [];
-    for (let i = 0; i < 10; i++) {
-        blocks.push(`<div>Block: ${i}</div>`);
-    }
-    return blocks;
-}
-
-function getPagelet(id) {
-    let ts = Math.random() * 100;
-    // 定时器，模拟异步数据
-    return new Promise((resolve, reject) => {
-        setTimeout(() => {
-            // 模拟接口异常
-            ts > 97 ? resolve({
-
-            }) : reject({
-                errorNo: 504,
-                errorMsg: 'Time out'
-            });
-        }, ts);
-
-    });
-}
