@@ -6,49 +6,26 @@ let server = http.createServer(function (req, res) {
     Object.assign(req, url.parse(req.url, true));
     req.path = req.pathname;
 
-    let timer = ~~ req.query.timer;
+    let timer = ~~req.query.timer;
 
-    setTimeout(
-        () => {
-            // 路由
-            try {
+    setTimeout(() => {
+        // 路由
+        try {
 
-                require(path.join(__dirname, 'router', getRouter(req.path)))(req, res);
-            }
-            catch (e) {
-                res.writeHead(404, {
-                    'Content-Type': 'text/plain'
-                });
-                res.end('Error 404');
-                console.log(e);
-            }
+            require(path.join(__dirname, 'router', getRouter(req.path)))(req, res);
+        }
+        catch (e) {
+            res.writeHead(404, {
+                'Content-Type': 'text/plain'
+            });
+            res.end('Error 404');
+            console.log(e);
+        }
 
-            res.flush = (blocks) => {
+        res.flush = (blocks) => {
 
-            };
-        }, timer);
-
-
-    //    res.writeHead(200, {
-    //        'Content-type': 'text/html'
-    //    });
-
-
-
-
-    //    let blocks = makeBlocks();
-    //
-    //    for (let i = 0; i < 10; i++) {
-    //        setTimeout(() => {
-    //            res.write(blocks[i]);
-    //        }, 500 * i);
-    //    }
-    //    setTimeout(function () {
-    //        res.end('-');
-    //    }, 5000);
-
-
-
+        };
+    }, timer);
 });
 
 server.listen(process.env.PORT || 8000, '127.0.0.1', function () {
